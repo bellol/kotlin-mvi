@@ -8,20 +8,19 @@ import io.reactivex.Observable
 sealed class MainInteractors {
 
     class TextStyleInteractor {
-        fun toggleBold(isBold: Boolean): Observable<MainViewState.PartialState.BoldTextState> {
-            return Observable.just(MainViewState.PartialState.BoldTextState(isBold))
-        }
+        fun toggleBold(isBold: Boolean) = Observable.just(MainViewState.PartialState.BoldTextState(isBold))
     }
 
     class CounterInteractor {
         var currentCount = 0
 
-        fun incrementCounter(): Observable<MainViewState.PartialState.CounterState> {
-            return Observable.just(MainViewState.PartialState.CounterState(++currentCount))
-        }
+        fun incrementCounter() = Observable.just(MainViewState.PartialState.CounterState(count = ++currentCount))
 
-        fun decrementCounter(): Observable<MainViewState.PartialState.CounterState> {
-            return Observable.just(MainViewState.PartialState.CounterState(--currentCount))
+        fun decrementCounter() = Observable.just(MainViewState.PartialState.CounterState(count = --currentCount))
+
+        fun resetCounter(): Observable<MainViewState.PartialState.CounterState> {
+            currentCount = 0
+            return Observable.just(MainViewState.PartialState.CounterState(count = currentCount))
         }
     }
 }

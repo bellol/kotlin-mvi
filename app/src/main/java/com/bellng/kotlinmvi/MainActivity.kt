@@ -2,6 +2,7 @@ package com.bellng.kotlinmvi
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import butterknife.BindView
@@ -17,6 +18,7 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), MainView {
     @BindView(R.id.decrement_button) lateinit var decrementButton: Button
     @BindView(R.id.bold_on_button) lateinit var boldOnButton: Button
     @BindView(R.id.bold_off_button) lateinit var boldOffButton: Button
+    @BindView(R.id.reset_button) lateinit var resetButton: Button
 
     override fun createPresenter(): MainPresenter {
         return MainPresenter()
@@ -35,15 +37,21 @@ class MainActivity : MviActivity<MainView, MainPresenter>(), MainView {
             text.setTypeface(null, Typeface.NORMAL)
         }
 
+        if (viewState.showResetButton) {
+            resetButton.visibility = View.VISIBLE
+        } else {
+            resetButton.visibility = View.GONE
+        }
+
         text.text = viewState.count.toString()
     }
 
-    override fun incrementIntent(): Observable<Unit> = incrementButton.clicks()
+    override fun incrementIntent() = incrementButton.clicks()
 
-    override fun decrementIntent(): Observable<Unit> = decrementButton.clicks()
+    override fun decrementIntent() = decrementButton.clicks()
 
-    override fun toggleOnBoldTextIntent(): Observable<Boolean> = boldOnButton.clicks().map { true }
+    override fun resetCounterIntent() = resetButton.clicks()
 
-    override fun toggleOffBoldTextIntent(): Observable<Boolean> = boldOffButton.clicks().map { false }
+    override fun toggleBoldTextIntent(): Observable<Boolean> = Observable.merge(boldOnButton.clicks().map { true }, boldOffButton.clicks().map { false })
 
 }

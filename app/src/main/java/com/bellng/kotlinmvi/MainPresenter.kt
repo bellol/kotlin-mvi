@@ -16,8 +16,8 @@ class MainPresenter : MviBasePresenter<MainView, MainViewState>() {
         val allIntents = Observable.merge(
                 incrementCounterIntent(),
                 decrementCounterIntent(),
-                toggleOnBoldTextIntent(),
-                toggleOffBoldTextIntent())
+                resetCounterIntent(),
+                toggleBoldTextIntent())
                 .observeOn(AndroidSchedulers.mainThread())
 
         subscribeViewState(allIntents.scan(MainViewState(), this::reduce), {
@@ -28,24 +28,13 @@ class MainPresenter : MviBasePresenter<MainView, MainViewState>() {
 
     private fun reduce(previousState: MainViewState, partialState: MainViewState.PartialState) = partialState.getUpdatedState(previousState)
 
-    private fun incrementCounterIntent(): Observable<MainViewState.PartialState> {
-        return intent { view -> view.incrementIntent() }
-                .switchMap { counterInteractor.incrementCounter() }
-    }
+    private fun incrementCounterIntent() = intent { view -> view.incrementIntent() }.switchMap { counterInteractor.incrementCounter() }
 
-    private fun decrementCounterIntent(): Observable<MainViewState.PartialState> {
-        return intent { view -> view.decrementIntent() }
-                .switchMap { counterInteractor.decrementCounter() }
-    }
+    private fun decrementCounterIntent() = intent { view -> view.decrementIntent() }.switchMap { counterInteractor.decrementCounter() }
 
-    private fun toggleOnBoldTextIntent(): Observable<MainViewState.PartialState> {
-        return intent { view -> view.toggleOnBoldTextIntent() }
-                .switchMap(textStyleInteractor::toggleBold)
-    }
+    private fun resetCounterIntent() = intent { view -> view.resetCounterIntent() }.switchMap { counterInteractor.resetCounter() }
 
-    private fun toggleOffBoldTextIntent(): Observable<MainViewState.PartialState> {
-        return intent { view -> view.toggleOffBoldTextIntent() }
-                .switchMap(textStyleInteractor::toggleBold)
-    }
+    private fun toggleBoldTextIntent() = intent { view -> view.toggleBoldTextIntent() }.switchMap(textStyleInteractor::toggleBold)
+
 }
 

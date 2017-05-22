@@ -12,9 +12,9 @@ interface MainView : MvpView {
 
     fun decrementIntent(): Observable<Unit>
 
-    fun toggleOnBoldTextIntent(): Observable<Boolean>
-
-    fun toggleOffBoldTextIntent(): Observable<Boolean>
+    fun toggleBoldTextIntent(): Observable<Boolean>
 
     fun render(viewState: MainViewState)
+
+    fun resetCounterIntent(): Observable<Unit>
 }

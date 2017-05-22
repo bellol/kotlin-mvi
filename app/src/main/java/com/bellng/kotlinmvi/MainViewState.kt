@@ -4,18 +4,20 @@ package com.bellng.kotlinmvi
  * Created by bellng on 21/5/17.
  */
 
-class MainViewState(val count: Int = 0, val hasBoldText: Boolean = false){
+data class MainViewState(val count: Int = 0, val hasBoldText: Boolean = false, val showResetButton: Boolean = false) {
+
     sealed class PartialState {
 
         abstract fun getUpdatedState(previousState: MainViewState): MainViewState
 
-        class BoldTextState(val hasBoldText: Boolean) : PartialState() {
-            override fun getUpdatedState(previousState: MainViewState) = MainViewState(count = previousState.count, hasBoldText = hasBoldText)
+        data class BoldTextState(val hasBoldText: Boolean) : PartialState() {
+            override fun getUpdatedState(previousState: MainViewState) = previousState.copy(hasBoldText = hasBoldText)
         }
 
-        class CounterState(val count: Int = 0) : PartialState() {
-            override fun getUpdatedState(previousState: MainViewState) = MainViewState(count = count, hasBoldText = previousState.hasBoldText)
+        data class CounterState(val count: Int = 0, val showResetButton: Boolean = count != 0) : PartialState() {
+            override fun getUpdatedState(previousState: MainViewState) = previousState.copy(count = count, showResetButton = showResetButton)
         }
+
     }
 }
 
